@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>ログイン</title>
+        <meta charset="UTF-8">
+         <meta name="loginPage" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     	<!-- Bootstrap CSS -->
+     	<link rel="stylesheet" href="/css/bootstrap.css" />
+     	<script src="/js/bootstrap.js"></script>
+
+	</head>
+    <body>
+    
+    	<h1 class="container-fluid">ログイン</h1>
+    
+        <div th:if="${param.error}" style="color:red;">
+            ユーザ名またはパスワードに誤りがあります
+        </div>
+        <div th:if="${param.logout}">
+            ログアウトしました
+        </div>
+        <form th:action="@{/loginPage}" method=post>
+            <div class ="form-inline"><label>ユーザ名　<input class="form-control" type="text" name="username"/></label></div>
+            <div class ="form-inline"><label>パスワード<input class="form-control" type="password" name="password"/></label></div>
+            <div><input type="submit" class="btn btn-dark" value="ログイン"/></div>
+        </form>
+    </body>
+</html>

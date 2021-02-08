@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+		<title>共通レイアウト</title>
+        <meta charset="UTF-8">
+         <meta name="top" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     	<!-- Bootstrap CSS -->
+     	<link rel="stylesheet" href="/css/bootstrap.css" />
+     	<script src="/js/bootstrap.js"></script>
+	</head>
+    <body>
+    	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  		<a class="navbar-brand" href="">J-NEXT</a>
+  			<div class="collapse navbar-collapse justify-content-end" id="navmenu">
+    			<div class="navbar-nav">
+    				<a class="nav-item nav-link active" href="/top">トップへ</a>
+    				<a class ="nav-item nav-link active" href="/logout" onclick="return confirm('ログアウトしますか？');">ログアウト</a>
+    				<a class ="nav-item nav-link active">
+    					<span sec:authentication="principal.username"></span>さん
+    				</a>
+    			</div>
+  			</div>
+		</nav>
+		<div layout:fragment="content"></div>
+    </body>
+</html>
