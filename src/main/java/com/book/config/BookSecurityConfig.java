@@ -13,6 +13,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.book.security.UserDetailsServiceImpl;
 
+/**
+ * セキュリティコンフィグクラス.
+ * 
+ * @author 岡田
+ *
+ */
 @EnableWebSecurity
 public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
 
