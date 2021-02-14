@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.book.entity.PasswordHistory;
+import com.book.form.PasswordForm;
 
 @Controller
 public class ChangePasswordController {
@@ -25,7 +26,7 @@ public class ChangePasswordController {
 	@RequestMapping("/forceEditPassword")
 	public String forceEditPassword(Model model) {
 		
-		model.addAttribute("passwordHistory", new PasswordHistory());
+		model.addAttribute("passwordForm", new PasswordForm());
 		
 		return "forceEditPassword";
 	}

@@ -2,6 +2,7 @@ package com.book.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -10,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.book.security.UserDetailsServiceImpl;
 
@@ -20,7 +23,8 @@ import com.book.security.UserDetailsServiceImpl;
  *
  */
 @EnableWebSecurity
-public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class BookSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
@@ -51,5 +55,10 @@ public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
 	PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
+
+	@Override
+	  public void addInterceptors(InterceptorRegistry registry) {
+	    registry.addInterceptor(userDetailsService);
+	  }
 
 }

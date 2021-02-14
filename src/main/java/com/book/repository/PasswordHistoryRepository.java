@@ -14,4 +14,6 @@ import com.book.entity.PasswordHistory;
 @Repository
 public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory, Integer> {
 	void deleteByAccount(Account account);
+
+	PasswordHistory findByAccount(Account account);
 }

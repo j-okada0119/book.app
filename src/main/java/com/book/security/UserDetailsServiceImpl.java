@@ -1,9 +1,14 @@
 package com.book.security;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.book.entity.Account;
 import com.book.entity.PasswordHistory;
@@ -19,7 +25,7 @@ import com.book.repository.AccountRepository;
 import com.book.repository.PasswordHistoryRepository;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterceptor {
 
 	@Autowired
     private AccountRepository accountRepository;
@@ -94,4 +100,33 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     	Account account = accountRepository.findById(id).get();
     	passwordHistoryRepository.deleteByAccount(account);
     }
+
+    private boolean passwordExpired(Account account) {
+    	PasswordHistory pwHistory = passwordHistoryRepository.findByAccount(account);
+		if (pwHistory != null) {
+			if (LocalDateTime.now().isAfter(pwHistory.getUpdateDate().plusDays(30))) {
+				 return false;
+			}
+		}
+		return true;
+    }
+
+    @Override
+    public boolean preHandle(HttpServletRequest request,
+            HttpServletResponse response, Object handler) throws IOException {
+	 Authentication authentication = (Authentication) request
+                .getUserPrincipal();
+	 if (authentication != null) {
+		 Object principal = authentication.getPrincipal();
+		 if (principal instanceof UserDetails) {
+			 UserDetailsImpl user = (UserDetailsImpl) principal;
+				if (!passwordExpired(user.getAccount())) {
+						response.sendRedirect(request.getContextPath()
+		                         + "/forceEditPassword");
+						 return false;
+				}
+		 }
+	 }
+	 return true;
+ }
 }

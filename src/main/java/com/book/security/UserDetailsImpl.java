@@ -18,7 +18,7 @@ public class UserDetailsImpl implements UserDetails {
 	
 	public UserDetailsImpl(Account account,Collection<GrantedAuthority> authorities){
 		this.user = account;
-		this.authorities = authorities;		
+		this.authorities = authorities;
 	}
 	
 	@Override
@@ -54,6 +54,10 @@ public class UserDetailsImpl implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public Account getAccount() {
+		return this.user;
 	}
 
 }
