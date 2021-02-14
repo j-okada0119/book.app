@@ -24,7 +24,7 @@ import com.book.security.UserDetailsServiceImpl;
  */
 @EnableWebSecurity
 @Configuration
-public class BookSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
@@ -55,10 +55,4 @@ public class BookSecurityConfig extends WebSecurityConfigurerAdapter implements 
 	PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
-
-	@Override
-	  public void addInterceptors(InterceptorRegistry registry) {
-	    registry.addInterceptor(userDetailsService);
-	  }
-
 }
