@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -94,5 +96,20 @@ public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterc
     public void deleteUser(int id) {
     	Account account = accountRepository.findById(id).get();
     	passwordHistoryRepository.deleteByAccount(account);
+    }
+
+    @Transactional
+    public void savePassword(String newPassword) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	UserDetailsImpl userDetails = (UserDetailsImpl) (authentication == null ? null : authentication.getPrincipal());
+    	Account account = accountRepository.findByUsername(userDetails.getUsername());
+    	PasswordHistory pwHistory = passwordHistoryRepository.findByAccount(account);
+    	if (pwHistory == null) {
+    		pwHistory = new PasswordHistory();
+    	}
+    	account.setPassword(passwordEncoder.encode(newPassword));
+    	pwHistory.setAccount(account);
+        pwHistory.setUpdateDate(LocalDateTime.now());
+        passwordHistoryRepository.save(pwHistory);
     }
 }

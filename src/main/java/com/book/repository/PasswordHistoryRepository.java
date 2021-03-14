@@ -13,7 +13,19 @@ import com.book.entity.PasswordHistory;
  * */
 @Repository
 public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory, Integer> {
+	
+	/**
+	 * アカウントを指定して削除.
+	 * 
+	 * @param accountオブジェクト
+	 */
 	void deleteByAccount(Account account);
 
+	/**
+	 * アカウントを指定してパスワード履歴を取得.
+	 * 
+	 * @param account オブジェクト
+	 * @return PasswordHistoryオブジェクト
+	 */
 	PasswordHistory findByAccount(Account account);
 }
