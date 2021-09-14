@@ -17,13 +17,13 @@
 			</table>
 			<h1>ユーザ新規登録</h1>
 			<form th:action="@{/security/add}" th:object="${account}"
-				th:method="post">
+				th:method="post" id="form">
 				<div>
-					<label>ユーザ名<input class="form-control" type="text"
+					<label>ユーザ名<input class="form-control validate[required, maxSize[20]]" type="text"
 						th:field="*{username}" /></label>
 				</div>
 				<div>
-					<label>パスワード<input type="text" class="form-control"
+					<label>パスワード<input type="text" class="form-control validate[required, minSize[10], maxSize[20], custom[passwordFormat]"
 						th:field="*{password}" /></label>
 				</div>
 				<div class="form-group">
