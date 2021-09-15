@@ -16,7 +16,7 @@ public class UserDetailsImpl implements UserDetails {
 	// 権限リスト
 	private Collection<GrantedAuthority> authorities;
 	
-	public UserDetailsImpl(Account account,Collection<GrantedAuthority> authorities){
+	public UserDetailsImpl(Account account, Collection<GrantedAuthority> authorities){
 		this.user = account;
 		this.authorities = authorities;
 	}

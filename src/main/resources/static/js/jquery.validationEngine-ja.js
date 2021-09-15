@@ -26,7 +26,7 @@
                 "minSize": {
                     "regex": "none",
                     "alertText": "* ",
-                    "alertText2": "文字以上にしてください"
+                    "alertText2": "文字以上で入力してださい"
                 },
 				"groupRequired": {
                     "regex": "none",
@@ -35,7 +35,7 @@
                 "maxSize": {
                     "regex": "none",
                     "alertText": "* ",
-                    "alertText2": "文字以下にしてください"
+                    "alertText2": "文字以内で入力してださい"
                 },
                 "min": {
                     "regex": "none",

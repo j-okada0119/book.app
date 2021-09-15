@@ -5,13 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.book.entity.Account;
+import com.book.form.AccountForm;
 import com.book.repository.AccountRepository;
 import com.book.security.UserDetailsServiceImpl;
 
@@ -71,7 +74,7 @@ public class SecurityController {
 	@RequestMapping(value = "/security/add", method = RequestMethod.GET)
 	public String add(Model model) {
 		
-		model.addAttribute("account", new Account());
+		model.addAttribute("accountForm", new AccountForm());
 		
 		return "/security/add";
 	}
@@ -84,7 +87,19 @@ public class SecurityController {
 	 * @return　
 	 */
 	@RequestMapping(value="/security/add", params="add", method=RequestMethod.POST)
-	public String add(@ModelAttribute Account account) {
+	public String add(Model model, @Validated AccountForm account, BindingResult result) {
+		if (result.hasErrors()) {
+			model.addAttribute("accountForm", account);
+			return "/security/add";
+		}
+		if (repository.existsByUsername(account.getUsername())) {
+			FieldError fieldError = new FieldError(result.getObjectName(), "username",
+					"入力されたユーザ名は既に存在しています。別のユーザ名を入力してください。");
+			result.addError(fieldError);
+			model.addAttribute("accountForm", account);
+			return "/security/add";
+		}
+		
 		
 		// 権限
 		String role = account.getRole();

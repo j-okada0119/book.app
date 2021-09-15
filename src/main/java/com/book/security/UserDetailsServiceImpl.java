@@ -25,7 +25,7 @@ import com.book.repository.PasswordHistoryRepository;
 public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterceptor {
 
 	@Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 	
 	@Autowired
 	private PasswordHistoryRepository passwordHistoryRepository;
@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterc
 	            throw new UsernameNotFoundException("Username is empty");
 	        }
 
-	        Account ac = accountRepository.findByUsername(username);
+	        Account ac = accountService.findByUsername(username);
 	        if (ac == null) {
 	            throw new UsernameNotFoundException("User not found: " + username);
 	        }
@@ -79,7 +79,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterc
     
     @Transactional
     public void editUser(Account account) {
-    	Account editAccount = accountRepository.findById(account.getId()).get();
+    	Account editAccount = accountService.findById(account.getId()).get();
     	
     	editAccount.setUsername(account.getUsername());
     	
@@ -89,12 +89,12 @@ public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterc
     		editAccount.setRole("USER");
     	}
     		      
-        accountRepository.save(editAccount);
+        accountService.save(editAccount);
     }
     
     @Transactional
     public void deleteUser(int id) {
-    	Account account = accountRepository.findById(id).get();
+    	Account account = accountService.findById(id).get();
     	passwordHistoryRepository.deleteByAccount(account);
     }
 
@@ -102,7 +102,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, HandlerInterc
     public void savePassword(String newPassword) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	UserDetailsImpl userDetails = (UserDetailsImpl) (authentication == null ? null : authentication.getPrincipal());
-    	Account account = accountRepository.findByUsername(userDetails.getUsername());
+    	Account account = accountService.findByUsername(userDetails.getUsername());
     	PasswordHistory pwHistory = passwordHistoryRepository.findByAccount(account);
     	if (pwHistory == null) {
     		pwHistory = new PasswordHistory();

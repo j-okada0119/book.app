@@ -10,20 +10,18 @@
 <body>
 	<div layout:fragment="content">
 		<div class="container-fluid">
-			<table>
-				<tr th:if="${validationError}" th:each="error : ${validationError}">
-					<td style="color: red;" th:text="${error}"></td>
-				</tr>
-			</table>
 			<h1>ユーザ新規登録</h1>
-			<form th:action="@{/security/add}" th:object="${account}"
+			<form th:action="@{/security/add}" th:object="${accountForm}"
 				th:method="post" id="form">
+				<div th:each="error : ${#fields.detailedErrors()}" class="alert alert-danger" role="alert">
+					<span th:text="${error.message}"></span>
+				</div>
 				<div>
-					<label>ユーザ名<input class="form-control validate[required, maxSize[20]]" type="text"
+					<label>ユーザ名<input class="form-control validate[maxSize[20]]" type="text"
 						th:field="*{username}" /></label>
 				</div>
 				<div>
-					<label>パスワード<input type="text" class="form-control validate[required, minSize[10], maxSize[20], custom[passwordFormat]"
+					<label>パスワード<input type="text" class="form-control validate[minSize[10], maxSize[20], custom[passwordFormat]"
 						th:field="*{password}" /></label>
 				</div>
 				<div class="form-group">
