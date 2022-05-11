@@ -11,27 +11,31 @@
 		<div class="container-fluid">
 			<h1>書籍登録</h1>
 			<form th:action="@{/create}" method="post" th:object="${bookRegist}">
-				<div class="form-group">
+				<div class="form-group col-1">
 					<label class="control-label">ID</label> <input class="form-control"
 						type="text" th:value="${id}" readonly>
 				</div>
-				<div class="form-group">
+				<div class="form-group col-5">
 					<label class="control-label">タイトル</label> <input type="text"
 						class="form-control" th:field="*{title}" />
 				</div>
-				<div class="form-group">
-					<label class="control-label">ジャンル</label> <input type="text"
-						class="form-control" th:field="*{genre}" />
+				<div class="form-group col-2">
+					<label class="control-label">ジャンル</label>
+					<div>
+						<select class="custom-select d-block" th:field="*{genre}">
+            				<option th:each="item : ${genreSelectBox}" th:value="${item.genreId}" th:text="${item.genreNm}"></option>
+						</select >
+					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group col-7">
 					<label class="control-label">内容</label>
 					<textarea rows="5" class="form-control" th:field="*{details}" /></textarea>
 				</div>
-				<div class="form-group">
+				<div class="form-group col-5">
 					<label class="control-label">著者</label> <input type="text"
 						class="form-control" th:field="*{author}" />
 				</div>
-				<div class="form-group">
+				<div class="form-group col-5">
 					<div>
 						<label class="control-label">貸出</label>
 					</div>

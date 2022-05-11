@@ -1,12 +1,11 @@
 package com.book.controller;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,11 +15,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.book.common.BookGenre;
 import com.book.entity.BookEntity;
 import com.book.form.BookEditForm;
 import com.book.form.BookRegist;
 import com.book.repository.BookRepository;
-import com.book.util.ConvertUtil;
 
 /**
  * コントローラークラス
@@ -36,10 +35,6 @@ public class BookController {
 	 */
 	@Autowired
 	private BookRepository repository;
-
-	// 変換・作成クラス
-	@Autowired
-	private ConvertUtil convertUtil;
 	
 	/**
 	 * リポジトリからDBの値を取得し画面に表示させる
@@ -52,9 +47,11 @@ public class BookController {
 	public String index(Model model) {
 		
 		// DBのデータ全件取得
-		List<BookEntity> book = repository.findAll();
+		List<BookEntity> entityList = repository.findAll();
 		// 画面表示用にリストを変換
-		List<BookEditForm> bookList = convertUtil.convertList(book);
+		List<BookEditForm> bookList = entityList.stream()
+				.map(BookEditForm::new)
+				.collect(Collectors.toList());
 		model.addAttribute("bookList", bookList);
 		return "/index";
 	}
@@ -79,6 +76,7 @@ public class BookController {
         Optional<Integer> lastId = book.stream().map(BookEntity::getId).max((id1, id2) -> id1 - id2);       
         model.addAttribute("id", lastId.orElse(0) + 1);
         model.addAttribute("items", radioMap);
+        model.addAttribute("genreSelectBox", Arrays.asList(BookGenre.values()));
 		model.addAttribute("bookRegist", new BookRegist());
 		return "/registration";
 	}
@@ -92,11 +90,7 @@ public class BookController {
 	 */
 	@RequestMapping(value="/create", params="add", method=RequestMethod.POST)
 	public String create(@ModelAttribute BookRegist bookRegist) {
-		
-		BookEntity entity = convertUtil.convertRegist(bookRegist);
-		
-		repository.save(entity);
-		
+		repository.save(bookRegist.toBookEntity());
 		return "redirect:/index";
 	}
 	
@@ -108,7 +102,7 @@ public class BookController {
 	 * @return　index.html
 	 */
 	@RequestMapping(value="/create", params="back", method=RequestMethod.POST)
-	public String create() {	
+	public String backPage() {	
 		return "redirect:/index";
 	}
 	

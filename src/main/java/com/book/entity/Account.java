@@ -43,23 +43,13 @@ public class Account {
 	// 権限
 	@Column(name = "role")
 	private String role;
-
-//	@Autowired
-//	private AccountService accountService;
 	
 	public Account(){}
 	
 	public Account(String username, String password, String role) {
-
-		setId(0);
-		setUsername(username);
-		setPassword(password);
-		setRole(role);
-
+		this.id=0;
+		this.username = username;
+		this.password = password;
+		this.role = role;
 	}
-	
-//	@AssertTrue(message = "入力されたユーザ名は既に存在しています。別のユーザ名を入力してください。")
-//	public boolean existsUsername() {
-//		return accountService.existsByUserName(username);
-//	}
 }
